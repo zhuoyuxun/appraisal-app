@@ -1,0 +1,3165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鄰房鑑定管理系統</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background: #f3f5f8;
+            color: #333;
+        }
+
+        header {
+            background: #263b50;
+            color: white;
+            padding: 20px 25px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            color: #d5e0eb;
+            font-size: 13px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .storage-bar-box {
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: #f4f7fa;
+            border: 1px solid #dce4ec;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #263b50;
+        }
+
+        .storage-bar-track {
+            width: 100%;
+            height: 8px;
+            background: #e1e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .storage-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #2878b5;
+            transition: width 0.3s ease;
+        }
+
+        button {
+            background: #2878b5;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        button:hover {
+            background: #1d5e91;
+        }
+
+        button.btn-edit {
+            background: #f0ad4e;
+            color: #fff;
+        }
+
+        button.btn-edit:hover {
+            background: #ec971f;
+        }
+
+        button.btn-delete {
+            background: #d9534f;
+        }
+
+        button.btn-delete:hover {
+            background: #c9302c;
+        }
+
+        button.btn-success {
+            background: #28a745;
+        }
+
+        button.btn-success:hover {
+            background: #218838;
+        }
+
+        button.btn-export {
+            background: #5b6abf;
+        }
+
+        button.btn-export:hover {
+            background: #4755a3;
+        }
+
+        button.btn-export-photo {
+            background: #1f8a70;
+        }
+
+        button.btn-export-photo:hover {
+            background: #176955;
+        }
+
+        button.btn-back {
+            background: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        button.btn-back:hover {
+            background: #5a6268;
+        }
+
+        .btn-camera {
+            display: inline-block;
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: background 0.2s;
+        }
+
+        .btn-camera:hover {
+            background: #d35400;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px 10px;
+            color: #888;
+        }
+
+        .form-box {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 8px;
+            border: 1px solid #e1e4e8;
+            margin-top: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label.field-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .required-star {
+            color: #d9534f;
+            margin-left: 2px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select {
+            padding: 10px;
+            width: 100%;
+            max-width: 460px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+            background: #fff;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 10px;
+            background: #fff;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            max-width: 650px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .sub-input-box {
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: #eef5fb;
+            border-left: 4px solid #2878b5;
+            border-radius: 6px;
+            max-width: 620px;
+        }
+
+        .sub-input-box label {
+            display: block;
+            font-weight: bold;
+            font-size: 13px;
+            color: #263b50;
+            margin-bottom: 5px;
+        }
+
+        .extra-notes-box {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 12px 14px;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .floor-note-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .floor-note-row input[type="text"] {
+            width: 90px !important;
+            max-width: 90px !important;
+            padding: 6px 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .crack-block {
+            background: #fff8ee;
+            border: 1px solid #f5cba7;
+            border-left: 4px solid #e67e22;
+            padding: 14px 16px;
+            border-radius: 8px;
+            max-width: 620px;
+            margin-bottom: 15px;
+        }
+
+        .crack-block label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            color: #9c4a00;
+            margin-bottom: 6px;
+        }
+
+        .input-with-unit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-with-unit input {
+            max-width: 220px !important;
+        }
+
+        .input-with-unit span {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .auto-desc-preview {
+            background: #fff;
+            border: 1px dashed #2878b5;
+            padding: 12px 15px;
+            border-radius: 6px;
+            color: #263b50;
+            font-size: 15px;
+            font-weight: bold;
+            max-width: 620px;
+        }
+
+        .project-item, .record-item {
+            padding: 18px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .project-item:last-child, .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .household-card-row {
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            border-left: 6px solid #e67e22;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .household-card-row.is-completed {
+            border-left-color: #28a745;
+            background: #f8fcf9;
+        }
+
+        .project-info {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .project-info h3 {
+            margin: 0 0 8px 0;
+            color: #263b50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-info p {
+            margin: 4px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .progress-wrapper {
+            margin-top: 10px;
+            max-width: 420px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background: #e4e9ef;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #e67e22;
+            border-radius: 999px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .progress-fill.completed {
+            background: #28a745;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+        }
+        .badge.incomplete {
+            background: #e67e22;
+        }
+        .badge.completed {
+            background: #28a745;
+        }
+
+        .status-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .status-banner.incomplete {
+            background: #fff3e6;
+            color: #b85600;
+            border: 1px solid #f5cba7;
+        }
+        .status-banner.completed {
+            background: #eaf7ee;
+            color: #1e7e34;
+            border: 1px solid #b7e4c7;
+        }
+
+        .specs-summary-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .record-photo {
+            width: 160px;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        /* 手機端自動隱藏 PDF 匯出按鈕，保留於電腦端輸出 */
+        @media (max-width: 768px), (pointer: coarse) {
+            .desktop-only-pdf {
+                display: none !important;
+            }
+        }
+
+        /* 現場鏡頭疊加浮水印視窗（白底黑字、精簡小字） */
+        .camera-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 32, 0.92);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .camera-modal.active {
+            display: flex;
+        }
+
+        .camera-box {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+        }
+
+        .camera-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .camera-hud-overlay {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            background: rgba(255, 255, 255, 0.88);
+            color: #111;
+            border: 1px solid #222;
+            padding: 4px 7px;
+            border-radius: 3px;
+            font-size: 11px;
+            line-height: 1.35;
+            pointer-events: none;
+            max-width: 82%;
+        }
+
+        .camera-controls {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>鄰房鑑定管理系統</h1>
+        <p>Neighboring Building Appraisal System</p>
+    </header>
+
+    <main>
+
+        <!-- 分頁一：案件總覽頁 -->
+        <div id="projectListView">
+            <section class="card">
+                <h2>歡迎使用鄰房鑑定管理系統</h2>
+                <p style="color:#555; font-size:14px;">集中管理案件、現場紀錄與高畫質鑑定照片（採用本機硬碟 IndexedDB 儲存，支援大容量照片與備份還原）。</p>
+                <div class="storage-bar-box">
+                    <div id="storageStatsText">正在檢查本機儲存空間...</div>
+                    <div class="storage-bar-track">
+                        <div id="storageBarFill" class="storage-bar-fill"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>案件管理</h2>
+
+                <button onclick="showForm()">＋ 新增案件</button>
+                <button class="btn-export" onclick="exportAllProjectsJSON()">💾 匯出全案資料 (JSON)</button>
+                <button class="btn-edit" onclick="triggerImportJSON()">📂 匯入還原資料 (JSON)</button>
+                <input type="file" id="importJsonInput" accept="application/json,.json" style="display:none;" onchange="handleImportJSONFile(event)">
+
+                <div id="projectForm" class="form-box" style="display:none;">
+                    <h3 id="formTitle" style="margin-top:0;">新增工程案件</h3>
+
+                    <div class="form-group">
+                        <label class="field-label" for="projectHeader">報告書抬頭</label>
+                        <input type="text" id="projectHeader" placeholder="例如：社團法人臺中市土木技師公會">
+                        <div class="hint-text">會顯示在調查紀錄表與鑑定報告書現況照片上方。</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="field-label" for="projectName">工程名稱</label>
+                        <input type="text" id="projectName" placeholder="例如：○○建築新建工程">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="field-label" for="projectLocation">工程地點</label>
+                        <input type="text" id="projectLocation" placeholder="請輸入工程地址">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="field-label" for="projectDate">鑑定日期</label>
+                        <input type="date" id="projectDate">
+                    </div>
+
+                    <button onclick="saveProject()">儲存案件</button>
+                    <button class="btn-back" style="margin-bottom:0;" onclick="hideForm()">取消</button>
+                </div>
+
+                <div id="projectList" class="empty" style="margin-top: 15px;">
+                    目前尚無案件資料
+                </div>
+            </section>
+        </div>
+
+        <!-- 分頁二：單一案件內部（戶別管理頁） -->
+        <div id="projectDetailView" style="display:none;">
+            <button class="btn-back" onclick="backToProjects()">← 返回案件列表</button>
+
+            <section class="card">
+                <h2 id="detailProjectName" style="margin-top:0; color:#263b50;"></h2>
+                <p id="detailProjectHeader" style="color:#555; margin: 5px 0; font-size:14px;"></p>
+                <p id="detailProjectLocation" style="color:#555; margin: 5px 0; font-size:14px;"></p>
+                <p id="detailProjectDate" style="color:#555; margin: 5px 0; font-size:14px;"></p>
+            </section>
+
+            <section class="card">
+                <h2>戶別管理</h2>
+                <p class="hint-text" style="margin-top:-6px; margin-bottom:12px;">鑑定前可先新增「戶別編號」與「戶別地址」建檔；用途、牆面、平頂、地坪與會勘狀況可進入該戶別內頁後再填寫或修改。</p>
+
+                <button onclick="showHouseholdForm()">＋ 新增戶別（僅需編號與地址）</button>
+
+                <!-- 精簡建戶表單：僅需戶別編號與戶別地址，方便事前排程建檔 -->
+                <div id="householdForm" class="form-box" style="display:none;">
+                    <h3 id="householdFormTitle" style="margin-top:0;">新增受鑑定戶別</h3>
+
+                    <div class="form-group">
+                        <label class="field-label" for="householdNumber">
+                            戶別編號 <span class="required-star">*</span>
+                        </label>
+                        <input type="text" id="householdNumber" placeholder="例如：23">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="field-label" for="householdAddress">
+                            戶別地址 <span class="required-star">*</span>
+                        </label>
+                        <input type="text" id="householdAddress" placeholder="請輸入受鑑定戶地址">
+                    </div>
+
+                    <button onclick="saveHouseholdBasic()">儲存戶別</button>
+                    <button class="btn-back" style="margin-bottom:0;" onclick="hideHouseholdForm()">取消</button>
+                </div>
+
+                <div id="householdList" class="empty" style="margin-top: 15px;">
+                    目前尚無戶別資料
+                </div>
+            </section>
+        </div>
+
+        <!-- 分頁三：單一戶別現場鑑定頁 -->
+        <div id="householdDetailView" style="display:none;">
+
+            <button class="btn-back" onclick="backToHouseholds()">
+                ← 返回戶別列表
+            </button>
+
+            <section class="card">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+                    <div style="flex:1; min-width:260px;">
+                        <h2 id="detailHouseholdNumber" style="margin:0 0 6px 0; color:#263b50;"></h2>
+                        <p id="detailHouseholdAddress" style="margin:4px 0; color:#555; font-size:14px;"></p>
+                        <div id="detailHouseholdStatusBanner" class="status-banner incomplete">
+                            ● 鑑定狀態：未完成
+                        </div>
+                    </div>
+                    <div>
+                        <button id="toggleStatusBtn" class="btn-success" onclick="toggleHouseholdStatus()">
+                            ✓ 標記為已完成
+                        </button>
+                        <button class="btn-edit" onclick="toggleHouseholdSpecsForm()">
+                            ✏️ 編輯用途／材質／會勘狀況
+                        </button>
+                        <button class="btn-export desktop-only-pdf" onclick="exportSurveyRecordPDF()">
+                            📄 匯出調查紀錄表
+                        </button>
+                        <button class="btn-export-photo desktop-only-pdf" onclick="exportPhotoDescriptionPDF()">
+                            🖼️ 匯出鑑定報告書現況照片
+                        </button>
+                    </div>
+                </div>
+
+                <div class="specs-summary-box">
+                    <p id="detailHouseholdSpecs" style="margin:0 0 4px 0;"></p>
+                    <p id="detailHouseholdSurveyInfo" style="margin:0; display:none;"></p>
+                </div>
+
+                <!-- 戶別內頁：用途、牆面、平頂、地坪與會勘狀況編輯區 -->
+                <div id="householdSpecsForm" class="form-box" style="display:none;">
+                    <h3 style="margin-top:0;">編輯戶別裝修材質與會勘狀況</h3>
+                    <p class="hint-text" style="margin-top:-6px; margin-bottom:14px;">※ 若勾選「拒絕鑑定」、「屢次造訪無人」或「本戶裝修」，用途、牆面、平頂、地坪可免填直接儲存。</p>
+
+                    <!-- 用途（可複選，一般情況必填） -->
+                    <div class="form-group">
+                        <label class="field-label">
+                            用途（可複選） <span class="required-star">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="hhUsage" value="商業"> 商業</label>
+                            <label><input type="checkbox" name="hhUsage" value="住宅"> 住宅</label>
+                            <label><input type="checkbox" name="hhUsage" value="辦公室"> 辦公室</label>
+                            <label><input type="checkbox" name="hhUsage" value="工業"> 工業</label>
+                            <label><input type="checkbox" name="hhUsage" value="宗教"> 宗教</label>
+                            <label><input type="checkbox" name="hhUsage" value="其他"> 其他</label>
+                        </div>
+                    </div>
+
+                    <!-- 牆面（可複選，一般情況必填） -->
+                    <div class="form-group">
+                        <label class="field-label">
+                            牆面（可複選） <span class="required-star">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="hhWall" value="水泥粉光"> 水泥粉光</label>
+                            <label><input type="checkbox" name="hhWall" value="油漆"> 油漆</label>
+                            <label><input type="checkbox" name="hhWall" value="壁紙"> 壁紙</label>
+                            <label><input type="checkbox" name="hhWall" value="磁磚"> 磁磚</label>
+                            <label><input type="checkbox" name="hhWall" value="裝飾品"> 裝飾品</label>
+                            <label><input type="checkbox" name="hhWall" value="其他"> 其他</label>
+                        </div>
+                    </div>
+
+                    <!-- 平頂（可複選，一般情況必填） -->
+                    <div class="form-group">
+                        <label class="field-label">
+                            平頂（可複選） <span class="required-star">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="hhCeiling" value="水泥粉光"> 水泥粉光</label>
+                            <label><input type="checkbox" name="hhCeiling" value="油漆"> 油漆</label>
+                            <label><input type="checkbox" name="hhCeiling" value="壁紙"> 壁紙</label>
+                            <label><input type="checkbox" name="hhCeiling" value="木架"> 木架</label>
+                            <label><input type="checkbox" name="hhCeiling" value="輕鋼架"> 輕鋼架</label>
+                            <label><input type="checkbox" name="hhCeiling" value="其他"> 其他</label>
+                        </div>
+                    </div>
+
+                    <!-- 地坪（可複選，一般情況必填） -->
+                    <div class="form-group">
+                        <label class="field-label">
+                            地坪（可複選） <span class="required-star">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="hhFloor" value="塑膠地磚"> 塑膠地磚</label>
+                            <label><input type="checkbox" name="hhFloor" value="磨石子"> 磨石子</label>
+                            <label><input type="checkbox" name="hhFloor" value="磁磚"> 磁磚</label>
+                            <label><input type="checkbox" name="hhFloor" value="地毯"> 地毯</label>
+                            <label><input type="checkbox" name="hhFloor" value="木板"> 木板</label>
+                            <label><input type="checkbox" name="hhFloor" value="其他"> 其他</label>
+                        </div>
+                    </div>
+
+                    <!-- ★會勘狀況（可複選、非必填） -->
+                    <div class="form-group">
+                        <label class="field-label">
+                            ★會勘狀況（可複選，非必填）
+                        </label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="hhSurveyStatus" value="部分隔間不便拍照"> 部分隔間不便拍照</label>
+                            <label><input type="checkbox" name="hhSurveyStatus" value="拒絕鑑定"> 拒絕鑑定</label>
+                            <label><input type="checkbox" name="hhSurveyStatus" value="屢次造訪無人"> 屢次造訪無人</label>
+                            <label><input type="checkbox" name="hhSurveyStatus" value="本戶裝修"> 本戶裝修</label>
+                        </div>
+                    </div>
+
+                    <!-- ※其他事項（非必填） -->
+                    <div class="form-group">
+                        <label class="field-label">
+                            ※其他事項（非必填）
+                        </label>
+                        <div class="extra-notes-box">
+                            <div class="floor-note-row">
+                                <span>地上</span>
+                                <input type="text" id="aboveFloorInput" placeholder="如：2 或 2~3">
+                                <span>層不便鑑定</span>
+                            </div>
+                            <div class="floor-note-row">
+                                <span>地下</span>
+                                <input type="text" id="belowFloorInput" placeholder="如：1 或 1~2">
+                                <span>層不便鑑定</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="saveHouseholdSpecs()">儲存材質與會勘狀況</button>
+                    <button class="btn-back" style="margin-bottom:0;" onclick="hideHouseholdSpecsForm()">取消</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>現場鑑定紀錄</h2>
+
+                <button onclick="showRecordForm()">＋ 新增現況紀錄</button>
+
+                <!-- 新增現況紀錄表單 -->
+                <div id="recordForm" class="form-box" style="display:none;">
+                    <h3 style="margin-top:0;">新增現場紀錄</h3>
+
+                    <!-- 1. 構件部位 -->
+                    <div class="form-group">
+                        <label class="field-label" for="recordComponent">
+                            構件部位 <span class="required-star">*</span>
+                        </label>
+                        <select id="recordComponent" onchange="handleComponentChange()">
+                            <option value="">請選擇</option>
+                            <option value="全景">全景</option>
+                            <option value="牆">牆</option>
+                            <option value="天花板">天花板</option>
+                            <option value="地坪">地坪</option>
+                            <option value="柱">柱</option>
+                            <option value="樑">樑</option>
+                            <option value="牆和天花板">牆和天花板</option>
+                            <option value="牆和地坪">牆和地坪</option>
+                            <option value="牆和柱">牆和柱</option>
+                            <option value="牆和樑">牆和樑</option>
+                            <option value="天花板和柱">天花板和柱</option>
+                            <option value="天花板和樑">天花板和樑</option>
+                            <option value="地坪和柱">地坪和柱</option>
+                            <option value="地坪和樑">地坪和樑</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. 現況 / 損壞類型（可複選） -->
+                    <div id="conditionSection" class="form-group">
+                        <label class="field-label">
+                            現況 / 損壞類型（可複選） <span class="required-star">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="condition" value="裂縫" onchange="updateCombinedDescription()"> 裂縫</label>
+                            <label><input type="checkbox" name="condition" value="白華" onchange="updateCombinedDescription()"> 白華</label>
+                            <label><input type="checkbox" name="condition" value="整面" onchange="updateCombinedDescription()"> 整面</label>
+                            <label><input type="checkbox" name="condition" value="多處" onchange="updateCombinedDescription()"> 多處</label>
+                            <label><input type="checkbox" name="condition" value="2條" onchange="updateCombinedDescription()"> 2條</label>
+                            <label><input type="checkbox" name="condition" value="3條" onchange="updateCombinedDescription()"> 3條</label>
+                            <label><input type="checkbox" name="condition" value="多條" onchange="updateCombinedDescription()"> 多條</label>
+                            <label><input type="checkbox" name="condition" value="網狀" onchange="updateCombinedDescription()"> 網狀</label>
+                            <label><input type="checkbox" name="condition" value="不規則" onchange="updateCombinedDescription()"> 不規則</label>
+                            <label><input type="checkbox" name="condition" value="龜裂" onchange="updateCombinedDescription()"> 龜裂</label>
+                            <label><input type="checkbox" name="condition" value="剝落" onchange="updateCombinedDescription()"> 剝落</label>
+                            <label><input type="checkbox" name="condition" value="滲水" onchange="updateCombinedDescription()"> 滲水</label>
+                            <label><input type="checkbox" name="condition" value="破損" onchange="updateCombinedDescription()"> 破損</label>
+                            <label><input type="checkbox" name="condition" value="鋼筋裸露" onchange="updateCombinedDescription()"> 鋼筋裸露</label>
+                            <label><input type="checkbox" name="condition" value="空心" onchange="updateCombinedDescription()"> 空心</label>
+                            <label><input type="checkbox" name="condition" value="裝修接縫" onchange="updateCombinedDescription()"> 裝修接縫</label>
+                            <label><input type="checkbox" id="otherCheckbox" name="condition" value="其他" onchange="handleOtherChange()"> 其他</label>
+                        </div>
+
+                        <div id="otherConditionContainer" class="sub-input-box" style="display:none;">
+                            <label for="otherConditionInput">其他現況 / 損壞內容</label>
+                            <input type="text" id="otherConditionInput" placeholder="請輸入其他異常內容" oninput="updateCombinedDescription()">
+                        </div>
+                    </div>
+
+                    <!-- 3. 獨立常駐的裂縫寬度區塊 -->
+                    <div id="crackWidthBlock" class="crack-block">
+                        <label for="crackWidthInput">裂縫寬度（選填，可輸入單一數值或區間）</label>
+                        <div class="input-with-unit">
+                            <input type="text" id="crackWidthInput" placeholder="例如：0.3 或 0.2~0.5" oninput="updateCombinedDescription()">
+                            <span>mm</span>
+                        </div>
+                        <div class="hint-text">若無裂縫可留空；若為區間請輸入如「0.2~0.5」。</div>
+                    </div>
+
+                    <!-- 4. 自動組合的詳細說明預覽 -->
+                    <div class="form-group">
+                        <label class="field-label">詳細說明</label>
+                        <div id="combinedDescPreview" class="auto-desc-preview">請先選擇構件部位</div>
+                    </div>
+
+                    <!-- 5. 即拍即傳區塊（連接鏡頭＋畫面疊加地址、編號、日期） -->
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="field-label">現場拍照（高畫質儲存，疊加地址、編號、日期後自動儲存）</label>
+                        <button type="button" class="btn-camera" onclick="openLiveCameraModal()">
+                            📷 開啟現場鏡頭拍攝
+                        </button>
+                        <input type="file" id="recordPhotoInput" accept="image/*" style="display:none;" onchange="handleFallbackPhotoUpload(event)">
+                        <p id="uploadStatusText" style="font-size:13px; color:#2878b5; margin-top:6px; display:none;">正在處理並儲存高畫質照片，請稍候...</p>
+                    </div>
+
+                    <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 12px;">
+                        <button onclick="saveRecordWithoutPhoto()">僅儲存文字（不拍照）</button>
+                        <button class="btn-back" style="margin-bottom:0;" onclick="hideRecordForm()">關閉表單</button>
+                    </div>
+                </div>
+
+                <!-- 紀錄列表 -->
+                <div id="recordList" class="empty" style="margin-top: 15px;">
+                    目前尚未建立任何現場紀錄
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- 現場鏡頭彈窗（含地址、編號、日期即時浮水印） -->
+    <div id="cameraModal" class="camera-modal">
+        <div class="camera-box">
+            <video id="cameraVideo" autoplay playsinline muted></video>
+            <div id="cameraHudOverlay" class="camera-hud-overlay"></div>
+        </div>
+        <div class="camera-controls">
+            <button type="button" class="btn-success" onclick="capturePhotoWithWatermark()">📸 拍照並儲存紀錄</button>
+            <button type="button" class="btn-edit" onclick="triggerFallbackFilePicker()">📁 改選本機圖片（測試備援）</button>
+            <button type="button" class="btn-back" style="margin-bottom:0;" onclick="closeLiveCameraModal()">取消關閉</button>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_HEADER = "社團法人臺中市土木技師公會";
+        const MAX_PHOTO_DIMENSION = 2560;
+        const PHOTO_JPEG_QUALITY = 0.92;
+
+        const DB_NAME = "NeighborAppraisalDB_v1";
+        const DB_VERSION = 1;
+        const STORE_PROJECTS = "projects";
+        const STORE_PHOTOS = "photos";
+
+        let db = null;
+        let projects = [];
+        let activeObjectUrls = [];
+
+        let currentProjectIndex = null;
+        let currentHouseholdIndex = null;
+        let editingProjectIndex = null;
+        let editingHouseholdIndex = null;
+
+        let cameraStream = null;
+        let pendingDetailsForFallback = null;
+
+        const SCOPE_ITEMS = ["整面", "多處"];
+        const COUNT_ITEMS = ["2條", "3條", "多條"];
+        const CRACK_STYLE_ITEMS = ["網狀", "不規則"];
+        const CRACK_NOUN_ITEMS = ["裂縫", "龜裂"];
+        const PHENOMENON_ITEMS = ["白華", "剝落", "滲水", "破損", "鋼筋裸露", "空心"];
+        const DAMAGE_ITEMS = ["白華", "剝落", "滲水", "破損", "鋼筋裸露", "空心"];
+
+        const HH_FIELD_CONFIG = {
+            usage:   { name: "hhUsage",   label: "用途" },
+            wall:    { name: "hhWall",    label: "牆面" },
+            ceiling: { name: "hhCeiling", label: "平頂" },
+            floor:   { name: "hhFloor",   label: "地坪" }
+        };
+
+        // 勾選以下任一會勘狀況時，放寬「用途、牆面、平頂、地坪」必填限制
+        const SKIP_SPECS_SURVEY_STATUSES = ["拒絕鑑定", "屢次造訪無人", "本戶裝修"];
+
+        // 統一狀態標準化為「已完成」與「未完成」
+        function normalizeStatus(status) {
+            return status === "已完成" ? "已完成" : "未完成";
+        }
+
+        // ==========================================
+        // 0. IndexedDB 大容量儲存引擎（支援數十 GB + 照片 Blob 分離）
+        // ==========================================
+
+        function openDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = function(event) {
+                    const database = event.target.result;
+                    if (!database.objectStoreNames.contains(STORE_PROJECTS)) {
+                        database.createObjectStore(STORE_PROJECTS, { keyPath: "id" });
+                    }
+                    if (!database.objectStoreNames.contains(STORE_PHOTOS)) {
+                        database.createObjectStore(STORE_PHOTOS, { keyPath: "photoId" });
+                    }
+                };
+
+                request.onsuccess = function(event) {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = function(event) {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function idbGetAll(storeName) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function idbPut(storeName, value) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const req = store.put(value);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+                tx.onabort = () => reject(tx.error || new Error("IndexedDB 寫入中止"));
+            });
+        }
+
+        function idbGet(storeName, key) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const req = store.get(key);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function idbDelete(storeName, key) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const req = store.delete(key);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function base64ToBlob(dataUrl) {
+            const parts = dataUrl.split(",");
+            const mimeMatch = parts[0].match(/:(.*?);/);
+            const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
+            const byteString = atob(parts[1]);
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mime });
+        }
+
+        function blobToDataUrl(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function generatePhotoId() {
+            return `photo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+        }
+
+        async function normalizeAndMigrateProjects(rawProjects) {
+            const normalized = [];
+            for (let pIdx = 0; pIdx < rawProjects.length; pIdx++) {
+                const proj = Object.assign({}, rawProjects[pIdx]);
+                if (!proj.id) proj.id = `proj_${Date.now()}_${pIdx}_${Math.random().toString(36).slice(2, 7)}`;
+                proj.households = Array.isArray(proj.households) ? proj.households : [];
+
+                for (let hIdx = 0; hIdx < proj.households.length; hIdx++) {
+                    const hh = Object.assign({}, proj.households[hIdx]);
+                    if (!hh.id) hh.id = `hh_${proj.id}_${hIdx}_${Math.random().toString(36).slice(2, 7)}`;
+                    hh.status = normalizeStatus(hh.status);
+                    hh.records = Array.isArray(hh.records) ? hh.records : [];
+
+                    for (let rIdx = 0; rIdx < hh.records.length; rIdx++) {
+                        const rec = Object.assign({}, hh.records[rIdx]);
+                        if (!rec.id) rec.id = Date.now() + rIdx;
+
+                        if (typeof rec.photo === "string" && rec.photo.startsWith("data:")) {
+                            const photoId = rec.photoId || generatePhotoId();
+                            const blob = base64ToBlob(rec.photo);
+                            await idbPut(STORE_PHOTOS, {
+                                photoId: photoId,
+                                blob: blob,
+                                updatedAt: Date.now()
+                            });
+                            rec.photoId = photoId;
+                            rec.hasPhoto = true;
+                            delete rec.photo;
+                        } else if (rec.photoId) {
+                            rec.hasPhoto = true;
+                        } else {
+                            rec.hasPhoto = false;
+                        }
+
+                        hh.records[rIdx] = rec;
+                    }
+
+                    proj.households[hIdx] = hh;
+                }
+
+                await idbPut(STORE_PROJECTS, proj);
+                normalized.push(proj);
+            }
+            return normalized;
+        }
+
+        async function persistProjectByIndex(index) {
+            if (index === null || index === undefined || !projects[index]) return true;
+            try {
+                await idbPut(STORE_PROJECTS, projects[index]);
+                refreshStorageEstimate();
+                return true;
+            } catch (e) {
+                alert("儲存失敗！請檢查裝置剩餘硬碟空間或瀏覽器儲存權限。");
+                return false;
+            }
+        }
+
+        async function refreshStorageEstimate() {
+            const textEl = document.getElementById("storageStatsText");
+            const fillEl = document.getElementById("storageBarFill");
+            if (!textEl || !fillEl) return;
+
+            let totalRecords = 0;
+            let totalPhotos = 0;
+            projects.forEach(p => {
+                (p.households || []).forEach(h => {
+                    const recs = h.records || [];
+                    totalRecords += recs.length;
+                    totalPhotos += recs.filter(r => r.photoId || r.hasPhoto).length;
+                });
+            });
+
+            if (navigator.storage && navigator.storage.estimate) {
+                try {
+                    const est = await navigator.storage.estimate();
+                    const usageMB = ((est.usage || 0) / (1024 * 1024)).toFixed(1);
+                    const quotaGB = ((est.quota || 0) / (1024 * 1024 * 1024)).toFixed(1);
+                    const pct = est.quota ? Math.min(100, ((est.usage || 0) / est.quota) * 100) : 0;
+
+                    textEl.textContent = `本機硬碟已用：${usageMB} MB ／ 瀏覽器可用配額：約 ${quotaGB} GB（共 ${projects.length} 案、${totalRecords} 筆紀錄、${totalPhotos} 張照片）`;
+                    fillEl.style.width = `${Math.max(pct, totalPhotos > 0 ? 1.5 : 0)}%`;
+                    return;
+                } catch (_) {}
+            }
+
+            textEl.textContent = `目前共 ${projects.length} 個案件、${totalRecords} 筆紀錄、${totalPhotos} 張高畫質照片（IndexedDB 大容量模式）`;
+        }
+
+        function revokeActiveObjectUrls() {
+            activeObjectUrls.forEach(url => {
+                try { URL.revokeObjectURL(url); } catch (_) {}
+            });
+            activeObjectUrls = [];
+        }
+
+        window.addEventListener("beforeunload", revokeActiveObjectUrls);
+
+        window.onload = async function() {
+            try {
+                if (navigator.storage && navigator.storage.persist) {
+                    await navigator.storage.persist().catch(() => false);
+                }
+                db = await openDatabase();
+
+                const legacyRaw = localStorage.getItem("projects");
+                if (legacyRaw) {
+                    try {
+                        const legacyProjects = JSON.parse(legacyRaw);
+                        if (Array.isArray(legacyProjects) && legacyProjects.length > 0) {
+                            await normalizeAndMigrateProjects(legacyProjects);
+                        }
+                        localStorage.removeItem("projects");
+                    } catch (_) {}
+                }
+
+                const storedProjects = await idbGetAll(STORE_PROJECTS);
+                projects = await normalizeAndMigrateProjects(storedProjects);
+                displayProjects();
+                refreshStorageEstimate();
+            } catch (err) {
+                alert("初始化本機大容量資料庫失敗，請確認瀏覽器支援 IndexedDB 或未處於封鎖儲存狀態。");
+            }
+        };
+
+        // --- 1. 案件管理 (CRUD) ---
+
+        function getProjectHeader(project) {
+            return (project && project.header) ? project.header : DEFAULT_HEADER;
+        }
+
+        function getProjectProgress(project) {
+            const households = project.households || [];
+            const total = households.length;
+            if (total === 0) {
+                return { total: 0, completed: 0, incomplete: 0, percent: 0 };
+            }
+            const completed = households.filter(h => normalizeStatus(h.status) === "已完成").length;
+            const incomplete = total - completed;
+            const percent = Math.round((completed / total) * 100);
+            return { total, completed, incomplete, percent };
+        }
+
+        function showForm() {
+            editingProjectIndex = null;
+            document.getElementById("formTitle").textContent = "新增工程案件";
+            document.getElementById("projectHeader").value = DEFAULT_HEADER;
+            document.getElementById("projectName").value = "";
+            document.getElementById("projectLocation").value = "";
+            document.getElementById("projectDate").value = "";
+            document.getElementById("projectForm").style.display = "block";
+        }
+
+        function hideForm() {
+            editingProjectIndex = null;
+            document.getElementById("projectForm").style.display = "none";
+        }
+
+        function editProject(index) {
+            editingProjectIndex = index;
+            const project = projects[index];
+
+            document.getElementById("formTitle").textContent = "編輯工程案件";
+            document.getElementById("projectHeader").value = getProjectHeader(project);
+            document.getElementById("projectName").value = project.name;
+            document.getElementById("projectLocation").value = project.location;
+            document.getElementById("projectDate").value = project.date;
+
+            document.getElementById("projectForm").style.display = "block";
+            document.getElementById("projectForm").scrollIntoView({ behavior: "smooth" });
+        }
+
+        async function deleteProject(index) {
+            const project = projects[index];
+            const projectName = project.name;
+            if (confirm(`確定要刪除案件「${projectName}」嗎？\n刪除後，該案件底下的所有戶別、紀錄與照片也會一併移除！`)) {
+                for (const hh of (project.households || [])) {
+                    for (const rec of (hh.records || [])) {
+                        if (rec.photoId) {
+                            await idbDelete(STORE_PHOTOS, rec.photoId).catch(() => {});
+                        }
+                    }
+                }
+                if (project.id) {
+                    await idbDelete(STORE_PROJECTS, project.id).catch(() => {});
+                }
+                projects.splice(index, 1);
+                if (editingProjectIndex === index) hideForm();
+                displayProjects();
+                refreshStorageEstimate();
+            }
+        }
+
+        async function saveProject() {
+            const header = document.getElementById("projectHeader").value.trim() || DEFAULT_HEADER;
+            const name = document.getElementById("projectName").value.trim();
+            const location = document.getElementById("projectLocation").value.trim();
+            const date = document.getElementById("projectDate").value;
+
+            if (!name || !location || !date) {
+                alert("請完整填寫案件資料！");
+                return;
+            }
+
+            if (editingProjectIndex !== null) {
+                projects[editingProjectIndex].header = header;
+                projects[editingProjectIndex].name = name;
+                projects[editingProjectIndex].location = location;
+                projects[editingProjectIndex].date = date;
+                await persistProjectByIndex(editingProjectIndex);
+                alert("案件修改成功！");
+            } else {
+                const newProj = {
+                    id: `proj_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+                    header: header,
+                    name: name,
+                    location: location,
+                    date: date,
+                    households: []
+                };
+                projects.push(newProj);
+                await persistProjectByIndex(projects.length - 1);
+                alert("案件新增成功！");
+            }
+
+            displayProjects();
+            hideForm();
+        }
+
+        function displayProjects() {
+            const list = document.getElementById("projectList");
+
+            if (projects.length === 0) {
+                list.className = "empty";
+                list.textContent = "目前尚無案件資料";
+                return;
+            }
+
+            list.className = "";
+            list.innerHTML = "";
+
+            projects.forEach(function(project, index) {
+                const item = document.createElement("div");
+                item.className = "project-item";
+
+                const infoDiv = document.createElement("div");
+                infoDiv.className = "project-info";
+
+                const title = document.createElement("h3");
+                title.textContent = project.name;
+
+                const headerP = document.createElement("p");
+                headerP.textContent = "報告書抬頭：" + getProjectHeader(project);
+
+                const location = document.createElement("p");
+                location.textContent = "工程地點：" + project.location;
+
+                const prog = getProjectProgress(project);
+                const date = document.createElement("p");
+                date.textContent = `鑑定日期：${project.date} ｜ 共 ${prog.total} 戶（已完成 ${prog.completed} 戶、未完成 ${prog.incomplete} 戶）`;
+
+                const progressWrapper = document.createElement("div");
+                progressWrapper.className = "progress-wrapper";
+
+                const progressHeader = document.createElement("div");
+                progressHeader.className = "progress-header";
+
+                const progLabel = document.createElement("span");
+                progLabel.textContent = `完成進度（已完成 ${prog.completed} / ${prog.total} 戶）`;
+
+                const progPercent = document.createElement("span");
+                progPercent.textContent = `${prog.percent}%`;
+
+                progressHeader.append(progLabel, progPercent);
+
+                const progressTrack = document.createElement("div");
+                progressTrack.className = "progress-track";
+
+                const progressFill = document.createElement("div");
+                progressFill.className = "progress-fill" + (prog.total > 0 && prog.percent === 100 ? " completed" : "");
+                progressFill.style.width = `${prog.percent}%`;
+
+                progressTrack.appendChild(progressFill);
+                progressWrapper.append(progressHeader, progressTrack);
+
+                infoDiv.append(title, headerP, location, date, progressWrapper);
+
+                const actionDiv = document.createElement("div");
+
+                const enterBtn = document.createElement("button");
+                enterBtn.textContent = "進入案件";
+                enterBtn.onclick = function() { openProject(index); };
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "編輯";
+                editBtn.className = "btn-edit";
+                editBtn.onclick = function() { editProject(index); };
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "移除";
+                deleteBtn.className = "btn-delete";
+                deleteBtn.onclick = function() { deleteProject(index); };
+
+                actionDiv.append(enterBtn, editBtn, deleteBtn);
+                item.append(infoDiv, actionDiv);
+                list.appendChild(item);
+            });
+        }
+
+        // --- 2. 分頁切換邏輯 ---
+
+        function openProject(index) {
+            revokeActiveObjectUrls();
+            currentProjectIndex = index;
+            const project = projects[index];
+            if (!project.households) project.households = [];
+
+            document.getElementById("detailProjectName").textContent = project.name;
+            document.getElementById("detailProjectHeader").textContent = "報告書抬頭：" + getProjectHeader(project);
+            document.getElementById("detailProjectLocation").textContent = "工程地點：" + project.location;
+            document.getElementById("detailProjectDate").textContent = "鑑定日期：" + project.date;
+
+            document.getElementById("projectListView").style.display = "none";
+            document.getElementById("projectDetailView").style.display = "block";
+            document.getElementById("householdDetailView").style.display = "none";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            hideHouseholdForm();
+            displayHouseholds();
+        }
+
+        function backToProjects() {
+            closeLiveCameraModal();
+            revokeActiveObjectUrls();
+            currentProjectIndex = null;
+            document.getElementById("projectDetailView").style.display = "none";
+            document.getElementById("householdDetailView").style.display = "none";
+            document.getElementById("projectListView").style.display = "block";
+            displayProjects();
+            refreshStorageEstimate();
+        }
+
+        function formatHouseholdSpecs(household) {
+            const u = (household.usages && household.usages.length) ? household.usages.join("、") : "尚未填寫";
+            const w = (household.walls && household.walls.length) ? household.walls.join("、") : "尚未填寫";
+            const c = (household.ceilings && household.ceilings.length) ? household.ceilings.join("、") : "尚未填寫";
+            const f = (household.floors && household.floors.length) ? household.floors.join("、") : "尚未填寫";
+            return `用途：${u} ｜ 牆面：${w} ｜ 平頂：${c} ｜ 地坪：${f}`;
+        }
+
+        function getOtherNotesText(household) {
+            const parts = [];
+            if (household.aboveFloorInaccessible) {
+                parts.push(`地上${household.aboveFloorInaccessible}層不便鑑定`);
+            }
+            if (household.belowFloorInaccessible) {
+                parts.push(`地下${household.belowFloorInaccessible}層不便鑑定`);
+            }
+            return parts.join("、");
+        }
+
+        function formatHouseholdSurveyInfo(household) {
+            const statusList = household.surveyStatuses || [];
+            const otherNotes = getOtherNotesText(household);
+            const segments = [];
+
+            if (statusList.length > 0) {
+                segments.push(`★會勘狀況：${statusList.join("、")}`);
+            }
+            if (otherNotes) {
+                segments.push(`※其他事項：${otherNotes}`);
+            }
+            return segments.join(" ｜ ");
+        }
+
+        function refreshHouseholdDetailSummary(household) {
+            const st = normalizeStatus(household.status);
+            document.getElementById("detailHouseholdNumber").textContent = "戶別編號：" + household.number;
+            document.getElementById("detailHouseholdAddress").textContent = "戶別地址：" + household.address;
+            document.getElementById("detailHouseholdSpecs").textContent = formatHouseholdSpecs(household);
+
+            const surveyEl = document.getElementById("detailHouseholdSurveyInfo");
+            const surveyText = formatHouseholdSurveyInfo(household);
+            if (surveyText) {
+                surveyEl.textContent = surveyText;
+                surveyEl.style.display = "block";
+            } else {
+                surveyEl.textContent = "";
+                surveyEl.style.display = "none";
+            }
+
+            updateHouseholdStatusUI(st);
+        }
+
+        function openHousehold(index) {
+            revokeActiveObjectUrls();
+            currentHouseholdIndex = index;
+            const project = projects[currentProjectIndex];
+            const household = project.households[index];
+            household.status = normalizeStatus(household.status);
+            if (!household.records) household.records = [];
+
+            refreshHouseholdDetailSummary(household);
+            hideHouseholdSpecsForm();
+
+            document.getElementById("projectDetailView").style.display = "none";
+            document.getElementById("householdDetailView").style.display = "block";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            hideRecordForm();
+            displayRecords();
+        }
+
+        function backToHouseholds() {
+            closeLiveCameraModal();
+            revokeActiveObjectUrls();
+            currentHouseholdIndex = null;
+            document.getElementById("householdDetailView").style.display = "none";
+            document.getElementById("projectDetailView").style.display = "block";
+            displayHouseholds();
+        }
+
+        // --- 3. 戶別管理操作（事前先建編號與地址，材質／會勘狀況在戶別內頁編輯） ---
+
+        function showHouseholdForm() {
+            editingHouseholdIndex = null;
+            document.getElementById("householdFormTitle").textContent = "新增受鑑定戶別（僅需編號與地址）";
+            document.getElementById("householdNumber").value = "";
+            document.getElementById("householdAddress").value = "";
+            document.getElementById("householdForm").style.display = "block";
+        }
+
+        function hideHouseholdForm() {
+            editingHouseholdIndex = null;
+            document.getElementById("householdForm").style.display = "none";
+        }
+
+        function editHouseholdBasic(index) {
+            const project = projects[currentProjectIndex];
+            const household = project.households[index];
+
+            editingHouseholdIndex = index;
+            document.getElementById("householdFormTitle").textContent = "編輯戶別編號與地址";
+            document.getElementById("householdNumber").value = household.number;
+            document.getElementById("householdAddress").value = household.address;
+            document.getElementById("householdForm").style.display = "block";
+            document.getElementById("householdForm").scrollIntoView({ behavior: "smooth" });
+        }
+
+        async function deleteHousehold(index) {
+            const project = projects[currentProjectIndex];
+            const household = project.households[index];
+
+            if (!confirm("確定要刪除戶別「" + household.number + "」嗎？")) return;
+
+            for (const rec of (household.records || [])) {
+                if (rec.photoId) {
+                    await idbDelete(STORE_PHOTOS, rec.photoId).catch(() => {});
+                }
+            }
+
+            project.households.splice(index, 1);
+            await persistProjectByIndex(currentProjectIndex);
+            hideHouseholdForm();
+            displayHouseholds();
+            alert("戶別已刪除！");
+        }
+
+        async function saveHouseholdBasic() {
+            const number = document.getElementById("householdNumber").value.trim();
+            const address = document.getElementById("householdAddress").value.trim();
+
+            if (!number || !address) {
+                alert("請完整填寫戶別編號與戶別地址！");
+                return;
+            }
+
+            const project = projects[currentProjectIndex];
+            const duplicate = project.households.some((h, idx) => h.number === number && idx !== editingHouseholdIndex);
+
+            if (duplicate) {
+                alert("這個戶別編號已經存在！");
+                return;
+            }
+
+            if (editingHouseholdIndex !== null) {
+                const household = project.households[editingHouseholdIndex];
+                household.number = number;
+                household.address = address;
+                household.status = normalizeStatus(household.status);
+                await persistProjectByIndex(currentProjectIndex);
+                alert("戶別編號與地址已更新！");
+            } else {
+                project.households.push({
+                    id: `hh_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+                    number: number,
+                    address: address,
+                    usages: [],
+                    walls: [],
+                    ceilings: [],
+                    floors: [],
+                    surveyStatuses: [],
+                    aboveFloorInaccessible: "",
+                    belowFloorInaccessible: "",
+                    status: "未完成",
+                    records: []
+                });
+                await persistProjectByIndex(currentProjectIndex);
+                alert("戶別已建立，可隨時進入填寫材質與現場紀錄！");
+            }
+
+            hideHouseholdForm();
+            displayHouseholds();
+        }
+
+        // 戶別內頁：用途、牆面、平頂、地坪與會勘狀況編輯
+        function populateHouseholdSpecsForm(householdData) {
+            Object.keys(HH_FIELD_CONFIG).forEach(key => {
+                const cfg = HH_FIELD_CONFIG[key];
+                const checkboxes = document.querySelectorAll(`input[name="${cfg.name}"]`);
+                checkboxes.forEach(cb => cb.checked = false);
+            });
+
+            const surveyCbs = document.querySelectorAll('input[name="hhSurveyStatus"]');
+            surveyCbs.forEach(cb => cb.checked = false);
+            document.getElementById("aboveFloorInput").value = "";
+            document.getElementById("belowFloorInput").value = "";
+
+            if (!householdData) return;
+
+            const propMap = {
+                usage: "usages",
+                wall: "walls",
+                ceiling: "ceilings",
+                floor: "floors"
+            };
+
+            Object.keys(HH_FIELD_CONFIG).forEach(key => {
+                const cfg = HH_FIELD_CONFIG[key];
+                const savedArr = householdData[propMap[key]] || [];
+                savedArr.forEach(item => {
+                    const cb = document.querySelector(`input[name="${cfg.name}"][value="${item}"]`);
+                    if (cb) cb.checked = true;
+                });
+            });
+
+            const savedSurvey = householdData.surveyStatuses || [];
+            savedSurvey.forEach(val => {
+                const cb = document.querySelector(`input[name="hhSurveyStatus"][value="${val}"]`);
+                if (cb) cb.checked = true;
+            });
+
+            document.getElementById("aboveFloorInput").value = householdData.aboveFloorInaccessible || "";
+            document.getElementById("belowFloorInput").value = householdData.belowFloorInaccessible || "";
+        }
+
+        function toggleHouseholdSpecsForm() {
+            const box = document.getElementById("householdSpecsForm");
+            if (box.style.display === "block") {
+                hideHouseholdSpecsForm();
+                return;
+            }
+            const household = projects[currentProjectIndex].households[currentHouseholdIndex];
+            populateHouseholdSpecsForm(household);
+            box.style.display = "block";
+            box.scrollIntoView({ behavior: "smooth" });
+        }
+
+        function hideHouseholdSpecsForm() {
+            document.getElementById("householdSpecsForm").style.display = "none";
+        }
+
+        function collectHouseholdMultiField(key) {
+            const cfg = HH_FIELD_CONFIG[key];
+            const checked = Array.from(document.querySelectorAll(`input[name="${cfg.name}"]:checked`)).map(cb => cb.value);
+
+            if (checked.length === 0) {
+                return { isValid: false, errorMsg: `請至少勾選一項「${cfg.label}」！`, values: [] };
+            }
+
+            return { isValid: true, errorMsg: "", values: checked };
+        }
+
+        async function saveHouseholdSpecs() {
+            const surveyStatuses = Array.from(document.querySelectorAll('input[name="hhSurveyStatus"]:checked')).map(cb => cb.value);
+            const skipSpecsRequired = surveyStatuses.some(st => SKIP_SPECS_SURVEY_STATUSES.includes(st));
+
+            const usageRes = collectHouseholdMultiField("usage");
+            const wallRes = collectHouseholdMultiField("wall");
+            const ceilingRes = collectHouseholdMultiField("ceiling");
+            const floorRes = collectHouseholdMultiField("floor");
+
+            if (!skipSpecsRequired) {
+                if (!usageRes.isValid) { alert(usageRes.errorMsg); return; }
+                if (!wallRes.isValid) { alert(wallRes.errorMsg); return; }
+                if (!ceilingRes.isValid) { alert(ceilingRes.errorMsg); return; }
+                if (!floorRes.isValid) { alert(floorRes.errorMsg); return; }
+            }
+
+            const aboveFloorInaccessible = document.getElementById("aboveFloorInput").value.trim();
+            const belowFloorInaccessible = document.getElementById("belowFloorInput").value.trim();
+
+            const household = projects[currentProjectIndex].households[currentHouseholdIndex];
+            household.usages = usageRes.values;
+            household.walls = wallRes.values;
+            household.ceilings = ceilingRes.values;
+            household.floors = floorRes.values;
+            household.surveyStatuses = surveyStatuses;
+            household.aboveFloorInaccessible = aboveFloorInaccessible;
+            household.belowFloorInaccessible = belowFloorInaccessible;
+
+            await persistProjectByIndex(currentProjectIndex);
+            refreshHouseholdDetailSummary(household);
+            hideHouseholdSpecsForm();
+            alert("戶別用途、材質與會勘狀況已儲存！");
+        }
+
+        function displayHouseholds() {
+            const project = projects[currentProjectIndex];
+            const list = document.getElementById("householdList");
+            list.innerHTML = "";
+
+            if (!project.households || project.households.length === 0) {
+                list.className = "empty";
+                list.textContent = "目前尚無戶別資料";
+                return;
+            }
+
+            list.className = "";
+
+            project.households.forEach(function(household, index) {
+                const st = normalizeStatus(household.status);
+                const isDone = st === "已完成";
+
+                const item = document.createElement("div");
+                item.className = "household-card-row" + (isDone ? " is-completed" : "");
+
+                const infoDiv = document.createElement("div");
+                infoDiv.className = "project-info";
+
+                const title = document.createElement("h3");
+                const nameLink = document.createElement("span");
+                nameLink.textContent = "戶別：" + household.number;
+                nameLink.style.cursor = "pointer";
+                nameLink.style.color = "#2878b5";
+                nameLink.onclick = function() { openHousehold(index); };
+
+                const statusBadge = document.createElement("span");
+                statusBadge.className = "badge " + (isDone ? "completed" : "incomplete");
+                statusBadge.textContent = isDone ? "✓ 已完成" : "● 未完成";
+
+                title.append(nameLink, statusBadge);
+
+                const address = document.createElement("p");
+                address.textContent = "地址：" + household.address;
+
+                const specs = document.createElement("p");
+                specs.textContent = formatHouseholdSpecs(household);
+
+                const recordCount = household.records ? household.records.length : 0;
+                const countP = document.createElement("p");
+                countP.textContent = `紀錄筆數：${recordCount} 筆`;
+
+                infoDiv.append(title, address, specs, countP);
+
+                const surveyText = formatHouseholdSurveyInfo(household);
+                if (surveyText) {
+                    const surveyP = document.createElement("p");
+                    surveyP.textContent = surveyText;
+                    infoDiv.appendChild(surveyP);
+                }
+
+                const actionDiv = document.createElement("div");
+
+                const enterBtn = document.createElement("button");
+                enterBtn.textContent = "進入鑑定";
+                enterBtn.onclick = function() { openHousehold(index); };
+
+                const quickToggleBtn = document.createElement("button");
+                quickToggleBtn.textContent = isDone ? "改為未完成" : "標記已完成";
+                quickToggleBtn.className = isDone ? "btn-back" : "btn-success";
+                quickToggleBtn.onclick = async function() {
+                    household.status = isDone ? "未完成" : "已完成";
+                    await persistProjectByIndex(currentProjectIndex);
+                    displayHouseholds();
+                };
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "編輯地址";
+                editBtn.className = "btn-edit";
+                editBtn.onclick = function() { editHouseholdBasic(index); };
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "刪除";
+                deleteBtn.className = "btn-delete";
+                deleteBtn.onclick = function() { deleteHousehold(index); };
+
+                actionDiv.append(enterBtn, quickToggleBtn, editBtn, deleteBtn);
+                item.append(infoDiv, actionDiv);
+                list.appendChild(item);
+            });
+        }
+
+        // --- 4. 現場現況紀錄與高畫質鏡頭浮水印拍攝 ---
+
+        function updateHouseholdStatusUI(status) {
+            const st = normalizeStatus(status);
+            const isDone = st === "已完成";
+            const banner = document.getElementById("detailHouseholdStatusBanner");
+            const btn = document.getElementById("toggleStatusBtn");
+
+            banner.textContent = isDone ? "✓ 鑑定狀態：已完成" : "● 鑑定狀態：未完成";
+            banner.className = "status-banner " + (isDone ? "completed" : "incomplete");
+
+            if (isDone) {
+                btn.textContent = "↺ 改為未完成";
+                btn.className = "btn-back";
+            } else {
+                btn.textContent = "✓ 標記為已完成";
+                btn.className = "btn-success";
+            }
+        }
+
+        async function toggleHouseholdStatus() {
+            const household = projects[currentProjectIndex].households[currentHouseholdIndex];
+            const currentSt = normalizeStatus(household.status);
+            household.status = currentSt === "已完成" ? "未完成" : "已完成";
+            await persistProjectByIndex(currentProjectIndex);
+            updateHouseholdStatusUI(household.status);
+        }
+
+        function handleComponentChange() {
+            const component = document.getElementById("recordComponent").value;
+            const conditionSection = document.getElementById("conditionSection");
+            const crackWidthBlock = document.getElementById("crackWidthBlock");
+
+            if (component === "全景") {
+                conditionSection.style.display = "none";
+                crackWidthBlock.style.display = "none";
+            } else {
+                conditionSection.style.display = "block";
+                crackWidthBlock.style.display = "block";
+            }
+
+            updateCombinedDescription();
+        }
+
+        function handleOtherChange() {
+            const isOtherChecked = document.getElementById("otherCheckbox").checked;
+            const otherContainer = document.getElementById("otherConditionContainer");
+            const otherInput = document.getElementById("otherConditionInput");
+
+            if (isOtherChecked) {
+                otherContainer.style.display = "block";
+            } else {
+                otherContainer.style.display = "none";
+                otherInput.value = "";
+            }
+
+            updateCombinedDescription();
+        }
+
+        function composeDescriptionSentence(component, rawValues, otherText, crackWidth) {
+            if (!component) return "";
+            if (component === "全景") return "現況";
+
+            const scopes = [];
+            const counts = [];
+            const styles = [];
+            const crackNouns = [];
+            const damages = [];
+            let hasTrimSeam = false;
+
+            rawValues.forEach(val => {
+                if (SCOPE_ITEMS.includes(val)) {
+                    scopes.push(val);
+                } else if (COUNT_ITEMS.includes(val)) {
+                    counts.push(val);
+                } else if (CRACK_STYLE_ITEMS.includes(val)) {
+                    styles.push(val);
+                } else if (CRACK_NOUN_ITEMS.includes(val)) {
+                    crackNouns.push(val);
+                } else if (val === "裝修接縫") {
+                    hasTrimSeam = true;
+                } else if (DAMAGE_ITEMS.includes(val)) {
+                    const label = PHENOMENON_ITEMS.includes(val) ? `${val}現象` : val;
+                    damages.push(label);
+                } else if (val === "其他") {
+                    const customLabel = otherText ? otherText : "其他異常";
+                    damages.push(customLabel);
+                } else {
+                    damages.push(val);
+                }
+            });
+
+            const scopePrefix = scopes.join("、");
+            const clauses = [];
+
+            damages.forEach(d => clauses.push(d));
+
+            if (hasTrimSeam) {
+                clauses.push("裝修接縫");
+            }
+
+            const hasCrackGroup = counts.length > 0 || styles.length > 0 || crackNouns.length > 0 || !!crackWidth;
+            if (hasCrackGroup) {
+                const countStr = counts.join("、");
+                const styleStr = styles.join("、");
+                const nounStr = crackNouns.length > 0 ? crackNouns.join("、") : "裂縫";
+                clauses.push(`${countStr}${styleStr}${nounStr}`);
+            }
+
+            let bodyText = "";
+            if (clauses.length === 0) {
+                bodyText = scopePrefix ? `${scopePrefix}異常` : "";
+            } else {
+                const joinedClauses = clauses.length > 1
+                    ? clauses.slice(0, -1).join("、") + "及" + clauses[clauses.length - 1]
+                    : clauses[0];
+                bodyText = scopePrefix ? `${scopePrefix}${joinedClauses}` : joinedClauses;
+            }
+
+            let sentence = `${component}有${bodyText}`;
+            if (crackWidth) {
+                sentence += `，寬約${crackWidth}mm`;
+            }
+
+            return sentence;
+        }
+
+        function buildRecordDetails() {
+            const component = document.getElementById("recordComponent").value;
+            if (!component) {
+                return {
+                    isValid: false,
+                    errorMsg: "請先選擇「構件部位」！",
+                    component: "",
+                    conditions: [],
+                    crackWidth: "",
+                    combinedDescription: ""
+                };
+            }
+
+            if (component === "全景") {
+                return {
+                    isValid: true,
+                    errorMsg: "",
+                    component: "全景",
+                    conditions: ["現況"],
+                    crackWidth: "",
+                    combinedDescription: "現況"
+                };
+            }
+
+            const checkboxes = document.querySelectorAll('input[name="condition"]:checked');
+            const isOtherChecked = document.getElementById("otherCheckbox").checked;
+            const otherText = document.getElementById("otherConditionInput").value.trim();
+            const crackWidth = document.getElementById("crackWidthInput").value.trim();
+
+            if (checkboxes.length === 0) {
+                return {
+                    isValid: false,
+                    errorMsg: "請至少勾選一項「現況 / 損壞類型」！",
+                    component: component,
+                    conditions: [],
+                    crackWidth: crackWidth,
+                    combinedDescription: ""
+                };
+            }
+
+            if (isOtherChecked && !otherText) {
+                return {
+                    isValid: false,
+                    errorMsg: "您勾選了「其他」，請填寫「其他現況 / 損壞內容」！",
+                    component: component,
+                    conditions: [],
+                    crackWidth: crackWidth,
+                    combinedDescription: ""
+                };
+            }
+
+            const rawValues = [];
+            checkboxes.forEach(cb => rawValues.push(cb.value));
+
+            const sentence = composeDescriptionSentence(component, rawValues, otherText, crackWidth);
+
+            return {
+                isValid: true,
+                errorMsg: "",
+                component: component,
+                conditions: rawValues,
+                crackWidth: crackWidth,
+                combinedDescription: sentence
+            };
+        }
+
+        function updateCombinedDescription() {
+            const previewEl = document.getElementById("combinedDescPreview");
+            const component = document.getElementById("recordComponent").value;
+
+            if (!component) {
+                previewEl.textContent = "請先選擇構件部位";
+                previewEl.style.color = "#888";
+                return;
+            }
+
+            if (component === "全景") {
+                previewEl.textContent = "現況";
+                previewEl.style.color = "#263b50";
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('input[name="condition"]:checked');
+            const otherText = document.getElementById("otherConditionInput").value.trim();
+            const crackWidth = document.getElementById("crackWidthInput").value.trim();
+
+            if (checkboxes.length === 0) {
+                previewEl.textContent = `${component}有（請勾選現況 / 損壞類型）`;
+                previewEl.style.color = "#888";
+                return;
+            }
+
+            const rawValues = [];
+            checkboxes.forEach(cb => rawValues.push(cb.value));
+
+            const sentence = composeDescriptionSentence(component, rawValues, otherText, crackWidth);
+            previewEl.textContent = sentence;
+            previewEl.style.color = "#263b50";
+        }
+
+        function showRecordForm() {
+            resetRecordInputs();
+            document.getElementById("recordForm").style.display = "block";
+            document.getElementById("recordForm").scrollIntoView({ behavior: "smooth" });
+        }
+
+        function hideRecordForm() {
+            closeLiveCameraModal();
+            document.getElementById("recordForm").style.display = "none";
+        }
+
+        function resetRecordInputs() {
+            document.getElementById("recordComponent").selectedIndex = 0;
+            document.getElementById("conditionSection").style.display = "block";
+            document.getElementById("crackWidthBlock").style.display = "block";
+
+            const checkboxes = document.querySelectorAll('input[name="condition"]');
+            checkboxes.forEach(cb => cb.checked = false);
+
+            document.getElementById("crackWidthInput").value = "";
+
+            document.getElementById("otherConditionContainer").style.display = "none";
+            document.getElementById("otherConditionInput").value = "";
+
+            document.getElementById("recordPhotoInput").value = "";
+            document.getElementById("uploadStatusText").style.display = "none";
+
+            updateCombinedDescription();
+        }
+
+        function getCurrentCameraOverlayInfo() {
+            const project = projects[currentProjectIndex];
+            const household = project.households[currentHouseholdIndex];
+            const nextNo = (household.records ? household.records.length : 0) + 1;
+
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
+
+            return {
+                address: `${household.number}_${household.address}`,
+                photoNo: `編號：${nextNo}`,
+                dateText: `日期：${dateStr}`
+            };
+        }
+
+        async function openLiveCameraModal() {
+            const details = buildRecordDetails();
+            if (!details.isValid) {
+                alert(details.errorMsg);
+                return;
+            }
+
+            const info = getCurrentCameraOverlayInfo();
+            const hud = document.getElementById("cameraHudOverlay");
+            hud.innerHTML = `
+                <div>地址：${escapeHtml(info.address)}</div>
+                <div>${escapeHtml(info.photoNo)} ${escapeHtml(info.dateText)}</div>
+            `;
+
+            const modal = document.getElementById("cameraModal");
+            const video = document.getElementById("cameraVideo");
+            modal.classList.add("active");
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert("此瀏覽器不支援直接開啟鏡頭，您可使用「改選本機圖片（測試備援）」測試。");
+                return;
+            }
+
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: { ideal: "environment" },
+                        width: { ideal: 2560 },
+                        height: { ideal: 1920 }
+                    },
+                    audio: false
+                });
+                video.srcObject = cameraStream;
+                await video.play();
+            } catch (err) {
+                alert("無法啟動實體鏡頭（可能裝置無鏡頭或尚未授權相機權限），您可使用「改選本機圖片」測試疊加浮水印與存檔。");
+            }
+        }
+
+        function closeLiveCameraModal() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            const video = document.getElementById("cameraVideo");
+            if (video) {
+                video.srcObject = null;
+            }
+            const modal = document.getElementById("cameraModal");
+            if (modal) {
+                modal.classList.remove("active");
+            }
+        }
+
+        function drawOverlayOnCanvas(ctx, width, height, info) {
+            const fontSize = Math.max(12, Math.round(width * 0.015));
+            const lineHeight = Math.round(fontSize * 1.32);
+            const padding = Math.max(4, Math.round(fontSize * 0.42));
+            const margin = Math.max(8, Math.round(width * 0.012));
+
+            const line1 = `地址：${info.address}`;
+            const line2 = `${info.photoNo}  ${info.dateText}`;
+
+            ctx.font = `${fontSize}px "DFKai-SB", "BiauKai", "標楷體", sans-serif`;
+            const w1 = ctx.measureText(line1).width;
+            const w2 = ctx.measureText(line2).width;
+            const boxW = Math.min(width - margin * 2, Math.max(w1, w2) + padding * 2);
+            const boxH = lineHeight * 2 + padding * 1.1;
+            const boxX = margin;
+            const boxY = height - margin - boxH;
+
+            ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
+            ctx.fillRect(boxX, boxY, boxW, boxH);
+
+            ctx.strokeStyle = "#111111";
+            ctx.lineWidth = Math.max(1, Math.round(fontSize / 12));
+            ctx.strokeRect(boxX + 0.5, boxY + 0.5, boxW - 1, boxH - 1);
+
+            ctx.fillStyle = "#111111";
+            ctx.textBaseline = "top";
+            ctx.fillText(line1, boxX + padding, boxY + padding * 0.55);
+            ctx.fillText(line2, boxX + padding, boxY + padding * 0.55 + lineHeight);
+        }
+
+        function renderHighResBlobFromSource(source, srcWidth, srcHeight, info) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement("canvas");
+                let width = srcWidth;
+                let height = srcHeight;
+
+                const longestSide = Math.max(width, height);
+                if (longestSide > MAX_PHOTO_DIMENSION) {
+                    const scale = MAX_PHOTO_DIMENSION / longestSide;
+                    width = Math.round(width * scale);
+                    height = Math.round(height * scale);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+                ctx.drawImage(source, 0, 0, width, height);
+                drawOverlayOnCanvas(ctx, width, height, info);
+
+                canvas.toBlob(
+                    blob => blob ? resolve(blob) : reject(new Error("影像轉檔失敗")),
+                    "image/jpeg",
+                    PHOTO_JPEG_QUALITY
+                );
+            });
+        }
+
+        async function capturePhotoWithWatermark() {
+            const details = buildRecordDetails();
+            if (!details.isValid) {
+                alert(details.errorMsg);
+                return;
+            }
+
+            const video = document.getElementById("cameraVideo");
+            if (!cameraStream || !video.videoWidth || !video.videoHeight) {
+                alert("目前沒有可用的鏡頭畫面，請先確認鏡頭權限或改選本機圖片。");
+                return;
+            }
+
+            const info = getCurrentCameraOverlayInfo();
+            const photoBlob = await renderHighResBlobFromSource(video, video.videoWidth, video.videoHeight, info);
+            closeLiveCameraModal();
+
+            if (await commitRecordToStorage(details, photoBlob)) {
+                await displayRecords();
+                resetRecordInputs();
+                alert(`已拍攝並儲存高畫質紀錄：\n${details.combinedDescription}`);
+            }
+        }
+
+        function triggerFallbackFilePicker() {
+            const details = buildRecordDetails();
+            if (!details.isValid) {
+                alert(details.errorMsg);
+                return;
+            }
+            pendingDetailsForFallback = details;
+            document.getElementById("recordPhotoInput").click();
+        }
+
+        function handleFallbackPhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const details = pendingDetailsForFallback || buildRecordDetails();
+            pendingDetailsForFallback = null;
+            if (!details.isValid) {
+                alert(details.errorMsg);
+                event.target.value = "";
+                return;
+            }
+
+            const info = getCurrentCameraOverlayInfo();
+            const statusText = document.getElementById("uploadStatusText");
+            statusText.style.display = "block";
+
+            const fileUrl = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = async function() {
+                try {
+                    const photoBlob = await renderHighResBlobFromSource(img, img.naturalWidth || img.width, img.naturalHeight || img.height, info);
+                    URL.revokeObjectURL(fileUrl);
+                    closeLiveCameraModal();
+
+                    const saved = await commitRecordToStorage(details, photoBlob);
+                    statusText.style.display = "none";
+                    event.target.value = "";
+
+                    if (saved) {
+                        await displayRecords();
+                        resetRecordInputs();
+                        alert(`已儲存高畫質紀錄（含地址、編號、日期浮水印）：\n${details.combinedDescription}`);
+                    }
+                } catch (err) {
+                    URL.revokeObjectURL(fileUrl);
+                    statusText.style.display = "none";
+                    event.target.value = "";
+                    alert("處理圖片時發生錯誤，請再試一次。");
+                }
+            };
+            img.onerror = function() {
+                URL.revokeObjectURL(fileUrl);
+                statusText.style.display = "none";
+                event.target.value = "";
+                alert("無法讀取所選圖片檔案。");
+            };
+            img.src = fileUrl;
+        }
+
+        async function saveRecordWithoutPhoto() {
+            const details = buildRecordDetails();
+            if (!details.isValid) {
+                alert(details.errorMsg);
+                return;
+            }
+
+            if (await commitRecordToStorage(details, null)) {
+                await displayRecords();
+                resetRecordInputs();
+                alert(`已儲存文字紀錄：\n${details.combinedDescription}`);
+            }
+        }
+
+        async function commitRecordToStorage(details, photoBlob) {
+            const household = projects[currentProjectIndex].households[currentHouseholdIndex];
+
+            const now = new Date();
+            const timestamp = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            let photoId = null;
+            if (photoBlob) {
+                photoId = generatePhotoId();
+                await idbPut(STORE_PHOTOS, {
+                    photoId: photoId,
+                    blob: photoBlob,
+                    updatedAt: Date.now()
+                });
+            }
+
+            const prevStatus = normalizeStatus(household.status);
+            household.records.push({
+                id: Date.now(),
+                component: details.component,
+                conditions: details.conditions,
+                crackWidth: details.crackWidth,
+                description: details.combinedDescription,
+                photoId: photoId,
+                hasPhoto: !!photoId,
+                timestamp: timestamp
+            });
+
+            household.status = prevStatus;
+
+            const ok = await persistProjectByIndex(currentProjectIndex);
+            if (!ok) {
+                household.records.pop();
+                household.status = prevStatus;
+                if (photoId) {
+                    await idbDelete(STORE_PHOTOS, photoId).catch(() => {});
+                }
+                return false;
+            }
+            return true;
+        }
+
+        async function deleteRecord(recordIndex) {
+            if (!confirm("確定要刪除這筆現場紀錄嗎？")) return;
+
+            const household = projects[currentProjectIndex].households[currentHouseholdIndex];
+            const target = household.records[recordIndex];
+            if (target && target.photoId) {
+                await idbDelete(STORE_PHOTOS, target.photoId).catch(() => {});
+            }
+
+            household.records.splice(recordIndex, 1);
+            await persistProjectByIndex(currentProjectIndex);
+            await displayRecords();
+        }
+
+        async function displayRecords() {
+            revokeActiveObjectUrls();
+            const household = projects[currentProjectIndex].households[currentHouseholdIndex];
+            const list = document.getElementById("recordList");
+            list.innerHTML = "";
+
+            if (!household.records || household.records.length === 0) {
+                list.className = "empty";
+                list.textContent = "目前尚未建立任何現場紀錄";
+                return;
+            }
+
+            list.className = "";
+
+            for (let index = 0; index < household.records.length; index++) {
+                const record = household.records[index];
+                const item = document.createElement("div");
+                item.className = "record-item";
+
+                const infoDiv = document.createElement("div");
+                infoDiv.className = "project-info";
+                infoDiv.style.flex = "1";
+
+                const title = document.createElement("h3");
+                const fullDesc = record.description || `${record.component}有${(record.conditions || []).join("、")}`;
+                title.textContent = `#${index + 1} ${fullDesc}`;
+
+                infoDiv.appendChild(title);
+
+                const time = document.createElement("p");
+                time.style.fontSize = "12px";
+                time.style.color = "#888";
+                time.textContent = "紀錄時間：" + record.timestamp;
+                infoDiv.appendChild(time);
+
+                const delBtn = document.createElement("button");
+                delBtn.textContent = "刪除紀錄";
+                delBtn.className = "btn-delete";
+                delBtn.style.marginTop = "8px";
+                delBtn.onclick = function() { deleteRecord(index); };
+                infoDiv.appendChild(delBtn);
+
+                item.appendChild(infoDiv);
+
+                if (record.photoId) {
+                    const photoEntry = await idbGet(STORE_PHOTOS, record.photoId).catch(() => null);
+                    if (photoEntry && photoEntry.blob) {
+                        const objUrl = URL.createObjectURL(photoEntry.blob);
+                        activeObjectUrls.push(objUrl);
+
+                        const img = document.createElement("img");
+                        img.src = objUrl;
+                        img.className = "record-photo";
+                        img.title = "點擊在新分頁檢視高畫質大圖";
+                        img.onclick = function() {
+                            const w = window.open("");
+                            w.document.write(`<img src="${objUrl}" style="max-width:100%;">`);
+                        };
+                        item.appendChild(img);
+                    }
+                }
+
+                list.appendChild(item);
+            }
+        }
+
+        // ==========================================
+        // 5. 報告書匯出（電腦端輸出）與 JSON 備份還原
+        // ==========================================
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return String(text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function formatROCDate(dateStr) {
+            if (!dateStr) return "  年  月  日";
+            const parts = dateStr.split("-");
+            if (parts.length !== 3) return escapeHtml(dateStr);
+            const rocYear = parseInt(parts[0], 10) - 1911;
+            const month = parseInt(parts[1], 10);
+            const day = parseInt(parts[2], 10);
+            return `${rocYear}年${month}月${day}日`;
+        }
+
+        function renderAlignedChecklistItems(options, selectedValues) {
+            const selectedSet = new Set(selectedValues || []);
+            const knownSet = new Set(options.filter(o => o !== "其他"));
+            const customExtras = (selectedValues || []).filter(v => !knownSet.has(v) && v !== "其他");
+
+            const cells = options.map(opt => {
+                if (opt === "其他") {
+                    const checked = selectedSet.has("其他") || customExtras.length > 0;
+                    const box = checked ? "■" : "□";
+                    const extraText = customExtras.length > 0 ? `(${escapeHtml(customExtras.join("、"))})` : "";
+                    return `<span class="chk-grid-cell">${box}其他${extraText}</span>`;
+                } else {
+                    const box = selectedSet.has(opt) ? "■" : "□";
+                    return `<span class="chk-grid-cell">${box}${escapeHtml(opt)}</span>`;
+                }
+            }).join("");
+
+            return `<div class="chk-grid">${cells}</div>`;
+        }
+
+        function parseRecordToMatrixRow(record, index) {
+            const comp = record.component || "";
+            const conds = record.conditions || [];
+            const desc = record.description || "";
+            const crackWidth = record.crackWidth || "";
+
+            const isPanorama = comp === "全景" || desc === "現況" || desc.includes("全景");
+            const isWall = comp.includes("牆");
+            const isCeiling = comp.includes("天花板");
+            const isFloor = comp.includes("地坪");
+            const isBeam = comp.includes("樑");
+            const isColumn = comp.includes("柱");
+
+            const hasConditionMark = !isPanorama && (conds.length > 0 || !!crackWidth || !!desc);
+            const hasCrack = conds.some(c => c.includes("裂縫") || c.includes("龜裂")) || desc.includes("裂縫") || desc.includes("龜裂") || !!crackWidth;
+            const hasSeepage = conds.includes("滲水") || desc.includes("滲水");
+            const hasSpalling = conds.includes("剝落") || desc.includes("剝落");
+
+            const remarkParts = [];
+            conds.forEach(c => {
+                if (!["裂縫", "龜裂", "滲水", "剝落", "現況"].includes(c)) {
+                    remarkParts.push(c);
+                }
+            });
+            if (!remarkParts.length && desc && !isPanorama) {
+                ["多條", "3條", "2條", "網狀", "不規則", "整面", "多處", "白華", "破損", "鋼筋裸露", "空心", "裝修接縫"].forEach(kw => {
+                    if (desc.includes(kw) && !remarkParts.includes(kw)) {
+                        remarkParts.push(kw);
+                    }
+                });
+            }
+
+            return {
+                no: index + 1,
+                panorama: isPanorama ? "■" : "□",
+                wall: isWall ? "■" : "□",
+                ceiling: isCeiling ? "■" : "□",
+                floor: isFloor ? "■" : "□",
+                beam: isBeam ? "■" : "□",
+                column: isColumn ? "■" : "□",
+                otherPos: "□",
+                conditionMark: hasConditionMark ? "∨" : "",
+                crackLen: "",
+                crackWidth: crackWidth ? escapeHtml(crackWidth) : "",
+                crackMark: hasCrack ? "∨" : "",
+                seepageMark: hasSeepage ? "∨" : "",
+                spallingMark: hasSpalling ? "∨" : "",
+                remark: escapeHtml(remarkParts.join("、"))
+            };
+        }
+
+        function exportSurveyRecordPDF() {
+            const project = projects[currentProjectIndex];
+            const household = project.households[currentHouseholdIndex];
+            const records = household.records || [];
+            const headerTitle = getProjectHeader(project);
+
+            const win = window.open("", "_blank");
+            if (!win) {
+                alert("瀏覽器阻擋了彈出視窗，請允許彈出視窗後再試一次。");
+                return;
+            }
+
+            const usageHtml = renderAlignedChecklistItems(["商業", "住宅", "辦公室", "工業", "宗教", "其他"], household.usages);
+            const wallHtml = renderAlignedChecklistItems(["水泥粉光", "油漆", "壁紙", "磁磚", "裝飾品", "其他"], household.walls);
+            const ceilingHtml = renderAlignedChecklistItems(["水泥粉光", "油漆", "壁紙", "木架", "輕鋼架", "其他"], household.ceilings);
+            const floorHtml = renderAlignedChecklistItems(["塑膠地磚", "磨石子", "磁磚", "地毯", "木板", "其他"], household.floors);
+
+            const surveySelected = new Set(household.surveyStatuses || []);
+            const surveyHtml = ["部分隔間不便拍照", "拒絕鑑定", "屢次造訪無人", "本戶裝修"]
+                .map(s => `<span class="chk-inline">${surveySelected.has(s) ? "■" : "□"}${escapeHtml(s)}</span>`)
+                .join("");
+
+            const otherNotesText = getOtherNotesText(household);
+
+            const ROWS_PER_PAGE = 20;
+            const totalPages = Math.max(1, Math.ceil(records.length / ROWS_PER_PAGE));
+            const pages = [];
+
+            for (let p = 0; p < totalPages; p++) {
+                const startIdx = p * ROWS_PER_PAGE;
+                let rowsHtml = "";
+
+                for (let slot = 0; slot < ROWS_PER_PAGE; slot++) {
+                    const globalIndex = startIdx + slot;
+                    if (globalIndex < records.length) {
+                        const r = parseRecordToMatrixRow(records[globalIndex], globalIndex);
+                        rowsHtml += `
+                            <tr class="data-row">
+                                <td class="c-center">${r.no}</td>
+                                <td class="c-center">${r.panorama}</td>
+                                <td class="c-center">${r.wall}</td>
+                                <td class="c-center">${r.ceiling}</td>
+                                <td class="c-center">${r.floor}</td>
+                                <td class="c-center">${r.beam}</td>
+                                <td class="c-center">${r.column}</td>
+                                <td class="c-center">${r.otherPos}</td>
+                                <td class="c-center">${r.conditionMark}</td>
+                                <td class="c-center">${r.crackLen}</td>
+                                <td class="c-center">${r.crackWidth}</td>
+                                <td class="c-center">${r.crackMark}</td>
+                                <td class="c-center">${r.seepageMark}</td>
+                                <td class="c-center">${r.spallingMark}</td>
+                                <td class="c-center">${r.remark}</td>
+                            </tr>
+                        `;
+                    } else {
+                        rowsHtml += `
+                            <tr class="data-row empty-row">
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        `;
+                    }
+                }
+
+                const isLastPage = p === totalPages - 1;
+                pages.push(`
+                    <div class="sheet-page ${!isLastPage ? "page-break" : ""}">
+                        <div class="org-header">${escapeHtml(headerTitle)}</div>
+                        <div class="doc-title">建築物鑑定（估）調查紀錄表及照片說明表</div>
+                        <div class="doc-subtitle">
+                            <span>鑑定日期：${formatROCDate(project.date)}</span>
+                            <span class="time-space">時  分</span>
+                        </div>
+
+                        <table class="sheet-table">
+                            <colgroup>
+                                <col style="width: 6.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 4.5%;">
+                                <col style="width: 5.5%;">
+                                <col style="width: 8.5%;">
+                                <col style="width: 9.5%;">
+                                <col style="width: 5.5%;">
+                                <col style="width: 5.5%;">
+                                <col style="width: 5.5%;">
+                                <col style="width: 17.4%;">
+                            </colgroup>
+                            <tr class="addr-row">
+                                <td class="addr-label" colspan="2">標的物之座落</td>
+                                <td class="addr-value" colspan="13"><strong>${escapeHtml(household.number)}</strong>_${escapeHtml(household.address)}</td>
+                            </tr>
+                            <tr class="spec-row">
+                                <td class="spec-label" colspan="2">用  途</td>
+                                <td class="spec-cell" colspan="13">${usageHtml}</td>
+                            </tr>
+                            <tr class="spec-row">
+                                <td class="spec-label" colspan="2">牆  面</td>
+                                <td class="spec-cell" colspan="13">${wallHtml}</td>
+                            </tr>
+                            <tr class="spec-row">
+                                <td class="spec-label" colspan="2">平  頂</td>
+                                <td class="spec-cell" colspan="13">${ceilingHtml}</td>
+                            </tr>
+                            <tr class="spec-row">
+                                <td class="spec-label" colspan="2">地  坪</td>
+                                <td class="spec-cell" colspan="13">${floorHtml}</td>
+                            </tr>
+                            <tr class="th-row">
+                                <th rowspan="2">照<br>片<br>編<br>號</th>
+                                <th colspan="7">位  置</th>
+                                <th rowspan="2">現<br>況</th>
+                                <th colspan="2">裂 縫</th>
+                                <th rowspan="2">裂<br>縫</th>
+                                <th rowspan="2">滲<br>水</th>
+                                <th rowspan="2">剝<br>落</th>
+                                <th rowspan="2">備  註</th>
+                            </tr>
+                            <tr class="th-row">
+                                <th>全<br>景</th>
+                                <th>牆</th>
+                                <th>平<br>頂</th>
+                                <th>地<br>坪</th>
+                                <th>樑</th>
+                                <th>柱</th>
+                                <th>其<br>他</th>
+                                <th>長<br>(m)</th>
+                                <th>寬<br>(mm)</th>
+                            </tr>
+                            ${rowsHtml}
+                            <tr class="survey-row">
+                                <td colspan="15"><strong>★會勘狀況</strong> ${surveyHtml}</td>
+                            </tr>
+                            <tr class="other-notes-row">
+                                <td colspan="15"><strong>※其他事項：</strong>${escapeHtml(otherNotesText)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                `);
+            }
+
+            const html = `
+                <!DOCTYPE html>
+                <html lang="zh-TW">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>建築物鑑定（估）調查紀錄表 - ${escapeHtml(household.number)}</title>
+                    <style>
+                        @page {
+                            size: A4 portrait;
+                            margin: 5mm 8mm;
+                        }
+                        * {
+                            box-sizing: border-box;
+                            font-family: "DFKai-SB", "BiauKai", "標楷體", serif;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 8px 12px;
+                            color: #111;
+                            font-size: 14.4px;
+                        }
+                        .no-print {
+                            margin-bottom: 10px;
+                            font-family: "Microsoft JhengHei", sans-serif;
+                        }
+                        .no-print button {
+                            background: #2878b5;
+                            color: #fff;
+                            border: none;
+                            padding: 7px 14px;
+                            border-radius: 5px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            margin-right: 8px;
+                        }
+                        .print-tip {
+                            font-size: 12px;
+                            color: #555;
+                            font-family: "Microsoft JhengHei", sans-serif;
+                        }
+                        .sheet-page {
+                            width: 100%;
+                            min-height: 282mm;
+                            display: flex;
+                            flex-direction: column;
+                            margin-bottom: 24px;
+                        }
+                        .org-header {
+                            text-align: center;
+                            font-size: 23px;
+                            font-weight: bold;
+                            letter-spacing: 1px;
+                            line-height: 1.15;
+                            margin-bottom: 2px;
+                            flex-shrink: 0;
+                        }
+                        .doc-title {
+                            text-align: center;
+                            font-size: 21.6px;
+                            font-weight: bold;
+                            letter-spacing: 1.5px;
+                            line-height: 1.2;
+                            margin-bottom: 2px;
+                            flex-shrink: 0;
+                        }
+                        .doc-subtitle {
+                            text-align: center;
+                            font-size: 15.6px;
+                            line-height: 1.2;
+                            margin-bottom: 4px;
+                            flex-shrink: 0;
+                        }
+                        .doc-subtitle span.time-space {
+                            margin-left: 56px;
+                        }
+                        table.sheet-table {
+                            width: 100%;
+                            flex: 1;
+                            table-layout: fixed;
+                            border-collapse: collapse;
+                            border: 2px solid #111;
+                            font-size: 14.4px;
+                        }
+                        table.sheet-table th,
+                        table.sheet-table td {
+                            border: 1px solid #222;
+                            padding: 1px 4px;
+                            line-height: 1.15;
+                            word-break: break-word;
+                        }
+                        tr.addr-row td {
+                            height: 20px;
+                            padding: 6px 8px;
+                            vertical-align: middle;
+                            font-size: 15.5px;
+                        }
+                        .addr-label, .spec-label {
+                            text-align: center;
+                            font-weight: bold;
+                        }
+                        td.spec-cell {
+                            padding: 2px 6px;
+                            vertical-align: middle;
+                        }
+                        .chk-grid {
+                            display: grid;
+                            grid-template-columns: repeat(6, 1fr);
+                            align-items: center;
+                            width: 100%;
+                        }
+                        .chk-grid-cell {
+                            display: block;
+                            text-align: left;
+                            white-space: nowrap;
+                        }
+                        .chk-inline {
+                            display: inline-block;
+                            margin-right: 10px;
+                        }
+                        tr.th-row th {
+                            padding: 2px 1px;
+                            line-height: 1.1;
+                        }
+                        tr.data-row td {
+                            height: 23px;
+                        }
+                        .c-center {
+                            text-align: center;
+                        }
+                        tr.survey-row td {
+                            padding: 4px 6px;
+                            height: 28px;
+                            vertical-align: middle;
+                        }
+                        tr.other-notes-row td {
+                            padding: 6px 8px;
+                            height: 108px;
+                            vertical-align: top;
+                        }
+                        @media print {
+                            .no-print { display: none !important; }
+                            body { padding: 0; }
+                            .sheet-page {
+                                min-height: 284mm;
+                                height: 284mm;
+                                margin-bottom: 0;
+                            }
+                            .page-break {
+                                page-break-after: always;
+                                break-after: page;
+                            }
+                            tr { page-break-inside: avoid; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="no-print">
+                        <button onclick="window.print()">🖨️ 列印 / 另存為 PDF</button>
+                        <button style="background:#6c757d;" onclick="window.close()">關閉視窗</button>
+                        <span class="print-tip">※ 若瀏覽器仍顯示頁首頁尾，請在列印視窗「更多設定」取消勾選「標頭與頁尾」。</span>
+                    </div>
+
+                    ${pages.join("")}
+                </body>
+                </html>
+            `;
+
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+        }
+
+        async function exportPhotoDescriptionPDF() {
+            const project = projects[currentProjectIndex];
+            const household = project.households[currentHouseholdIndex];
+            const records = household.records || [];
+            const headerTitle = `${getProjectHeader(project)} 鑑定報告書現況照片`;
+
+            const win = window.open("", "_blank");
+            if (!win) {
+                alert("瀏覽器阻擋了彈出視窗，請允許彈出視窗後再試一次。");
+                return;
+            }
+
+            const enrichedRecords = [];
+            const printUrls = [];
+            for (let i = 0; i < records.length; i++) {
+                const rec = records[i];
+                let imgUrl = null;
+                if (rec.photoId) {
+                    const entry = await idbGet(STORE_PHOTOS, rec.photoId).catch(() => null);
+                    if (entry && entry.blob) {
+                        imgUrl = URL.createObjectURL(entry.blob);
+                        printUrls.push(imgUrl);
+                    }
+                }
+                enrichedRecords.push({ rec, globalIndex: i, imgUrl });
+            }
+
+            const ITEMS_PER_PAGE = 2;
+            const pageGroups = [];
+            if (enrichedRecords.length === 0) {
+                pageGroups.push([]);
+            } else {
+                for (let i = 0; i < enrichedRecords.length; i += ITEMS_PER_PAGE) {
+                    pageGroups.push(enrichedRecords.slice(i, i + ITEMS_PER_PAGE));
+                }
+            }
+
+            const pagesHtml = pageGroups.map((group, pIdx) => {
+                let groupContent = "";
+                if (group.length === 0) {
+                    groupContent = `<div class="empty-box">目前尚無現場鑑定紀錄與照片</div>`;
+                } else {
+                    groupContent = group.map(({ rec, globalIndex, imgUrl }) => {
+                        const desc = rec.description || `${rec.component || ""}有${(rec.conditions || []).join("、")}`;
+                        const photoBlock = imgUrl
+                            ? `<img src="${imgUrl}" alt="照片 ${globalIndex + 1}">`
+                            : `<div class="no-photo-box">此筆紀錄未附照片</div>`;
+
+                        return `
+                            <div class="photo-slot-card">
+                                <table class="photo-meta-table">
+                                    <colgroup>
+                                        <col style="width: 9%;">
+                                        <col style="width: 11%;">
+                                        <col style="width: 80%;">
+                                    </colgroup>
+                                    <tr>
+                                        <td class="label-cell">編 號</td>
+                                        <td class="addr-cell" colspan="2"><strong>${escapeHtml(household.number)}</strong>_${escapeHtml(household.address)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="no-cell">${globalIndex + 1}</td>
+                                        <td class="desc-label-cell">說 明</td>
+                                        <td class="desc-text-cell">${escapeHtml(desc)}。</td>
+                                    </tr>
+                                </table>
+                                <div class="photo-canvas-wrap">
+                                    <div class="photo-ratio-box">
+                                        ${photoBlock}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join("");
+                }
+
+                const isLastPage = pIdx === pageGroups.length - 1;
+                return `
+                    <div class="photo-page ${!isLastPage ? "page-break" : ""}">
+                        <div class="report-title">${escapeHtml(headerTitle)}</div>
+                        <div class="photo-page-stack">
+                            ${groupContent}
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            const html = `
+                <!DOCTYPE html>
+                <html lang="zh-TW">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>鑑定報告書現況照片 - ${escapeHtml(household.number)}</title>
+                    <style>
+                        @page {
+                            size: A4 portrait;
+                            margin: 6mm 8mm;
+                        }
+                        * {
+                            box-sizing: border-box;
+                            font-family: "DFKai-SB", "BiauKai", "標楷體", serif;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 8px 12px;
+                            color: #111;
+                            font-size: 13px;
+                        }
+                        .no-print {
+                            margin-bottom: 10px;
+                            font-family: "Microsoft JhengHei", sans-serif;
+                        }
+                        .no-print button {
+                            background: #1f8a70;
+                            color: #fff;
+                            border: none;
+                            padding: 7px 14px;
+                            border-radius: 5px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            margin-right: 8px;
+                        }
+                        .print-tip {
+                            font-size: 12px;
+                            color: #555;
+                            font-family: "Microsoft JhengHei", sans-serif;
+                        }
+                        .photo-page {
+                            width: 194mm;
+                            height: 282mm;
+                            margin: 0 auto 20px auto;
+                            display: flex;
+                            flex-direction: column;
+                            overflow: hidden;
+                        }
+                        .report-title {
+                            text-align: center;
+                            font-size: 22.8px;
+                            font-weight: bold;
+                            letter-spacing: 1px;
+                            height: 9mm;
+                            line-height: 9mm;
+                            margin-bottom: 2mm;
+                            flex-shrink: 0;
+                            overflow: hidden;
+                            white-space: nowrap;
+                        }
+                        .photo-page-stack {
+                            height: 271mm;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-start;
+                            gap: 4mm;
+                        }
+                        .photo-slot-card {
+                            width: 100%;
+                            height: 133.5mm;
+                            border: 1.5px solid #111;
+                            background: #fff;
+                            display: flex;
+                            flex-direction: column;
+                            overflow: hidden;
+                            flex-shrink: 0;
+                        }
+                        .photo-meta-table {
+                            width: 100%;
+                            height: 15mm;
+                            table-layout: fixed;
+                            border-collapse: collapse;
+                            font-size: 13px;
+                            flex-shrink: 0;
+                        }
+                        .photo-meta-table tr {
+                            height: 7.5mm;
+                        }
+                        .photo-meta-table td {
+                            border: 1px solid #222;
+                            padding: 0 8px;
+                            height: 7.5mm;
+                            line-height: 1.25;
+                            vertical-align: middle;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                        }
+                        .label-cell, .no-cell, .desc-label-cell {
+                            text-align: center;
+                            font-weight: bold;
+                        }
+                        .photo-canvas-wrap {
+                            width: 100%;
+                            height: 118mm;
+                            padding: 3mm 6mm;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            overflow: hidden;
+                            flex-shrink: 0;
+                        }
+                        .photo-ratio-box {
+                            width: 148mm;
+                            height: 111mm;
+                            overflow: hidden;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background: #f7f7f7;
+                            border: 1px solid #ccc;
+                            flex-shrink: 0;
+                        }
+                        .photo-ratio-box img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                        }
+                        .no-photo-box {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #888;
+                            font-size: 13px;
+                        }
+                        .empty-box {
+                            width: 100%;
+                            height: 271mm;
+                            text-align: center;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #777;
+                            border: 1.5px solid #111;
+                            font-size: 13px;
+                        }
+                        @media print {
+                            .no-print { display: none !important; }
+                            body { padding: 0; margin: 0; }
+                            .photo-page {
+                                width: 194mm;
+                                height: 282mm;
+                                margin: 0 auto;
+                            }
+                            .page-break {
+                                page-break-after: always;
+                                break-after: page;
+                            }
+                            .photo-slot-card {
+                                page-break-inside: avoid;
+                                break-inside: avoid;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="no-print">
+                        <button onclick="window.print()">🖨️ 列印 / 另存為 PDF</button>
+                        <button style="background:#6c757d;" onclick="window.close()">關閉視窗</button>
+                        <span class="print-tip">※ 若瀏覽器仍顯示頁首頁尾，請在列印視窗「更多設定」取消勾選「標頭與頁尾」。</span>
+                    </div>
+
+                    ${pagesHtml}
+                </body>
+                </html>
+            `;
+
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+        }
+
+        async function exportAllProjectsJSON() {
+            if (!projects || projects.length === 0) {
+                alert("目前沒有可匯出的案件資料。");
+                return;
+            }
+
+            const exportPayload = [];
+            for (const proj of projects) {
+                const projCopy = JSON.parse(JSON.stringify(proj));
+                for (const hh of (projCopy.households || [])) {
+                    for (const rec of (hh.records || [])) {
+                        if (rec.photoId) {
+                            const entry = await idbGet(STORE_PHOTOS, rec.photoId).catch(() => null);
+                            if (entry && entry.blob) {
+                                rec.photo = await blobToDataUrl(entry.blob);
+                            }
+                        }
+                    }
+                }
+                exportPayload.push(projCopy);
+            }
+
+            const dataStr = JSON.stringify(exportPayload, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const now = new Date();
+            const dateTag = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `鄰房鑑定資料_${dateTag}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function triggerImportJSON() {
+            document.getElementById("importJsonInput").click();
+        }
+
+        function handleImportJSONFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    const incomingList = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.projects) ? parsed.projects : null);
+                    if (!incomingList) {
+                        alert("JSON 格式不正確，無法還原案件資料。");
+                        event.target.value = "";
+                        return;
+                    }
+
+                    const mergeMode = confirm(
+                        `偵測到 ${incomingList.length} 個案件備份。\n\n` +
+                        `按「確定」＝ 合併匯入（保留現有案件，並將相同案件的新戶別／新紀錄合併進來）\n` +
+                        `按「取消」＝ 完整覆蓋還原（清除目前本機所有案件與照片，改為備份檔內容）`
+                    );
+
+                    if (!mergeMode) {
+                        for (const p of projects) {
+                            for (const h of (p.households || [])) {
+                                for (const r of (h.records || [])) {
+                                    if (r.photoId) await idbDelete(STORE_PHOTOS, r.photoId).catch(() => {});
+                                }
+                            }
+                            if (p.id) await idbDelete(STORE_PROJECTS, p.id).catch(() => {});
+                        }
+                        projects = await normalizeAndMigrateProjects(incomingList);
+                    } else {
+                        const normalizedIncoming = await normalizeAndMigrateProjects(incomingList);
+                        for (const incProj of normalizedIncoming) {
+                            const existingIdx = projects.findIndex(p => p.name === incProj.name && p.date === incProj.date);
+                            if (existingIdx === -1) {
+                                projects.push(incProj);
+                                await persistProjectByIndex(projects.length - 1);
+                            } else {
+                                const targetProj = projects[existingIdx];
+                                targetProj.households = targetProj.households || [];
+                                for (const incHh of (incProj.households || [])) {
+                                    const hhIdx = targetProj.households.findIndex(h => h.number === incHh.number);
+                                    if (hhIdx === -1) {
+                                        targetProj.households.push(incHh);
+                                    } else {
+                                        const targetHh = targetProj.households[hhIdx];
+                                        targetHh.records = targetHh.records || [];
+                                        const existingRecIds = new Set(targetHh.records.map(r => r.id));
+                                        for (const incRec of (incHh.records || [])) {
+                                            if (!existingRecIds.has(incRec.id)) {
+                                                targetHh.records.push(incRec);
+                                            }
+                                        }
+                                        if (normalizeStatus(targetHh.status) === "未完成" && normalizeStatus(incHh.status) === "已完成") {
+                                            targetHh.status = "已完成";
+                                        }
+                                    }
+                                }
+                                await persistProjectByIndex(existingIdx);
+                            }
+                        }
+                    }
+
+                    displayProjects();
+                    refreshStorageEstimate();
+                    alert("資料還原完成！");
+                } catch (err) {
+                    alert("匯入失敗：檔案損毀或非有效的 JSON 備份檔。");
+                } finally {
+                    event.target.value = "";
+                }
+            };
+            reader.readAsText(file, "utf-8");
+        }
+    </script>
+
+</body>
+</html>
